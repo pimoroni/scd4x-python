@@ -1,8 +1,9 @@
-import time
 import struct
+import time
+
 from smbus2 import SMBus, i2c_msg
 
-__version__ = '0.0.1'
+__version__ = "0.0.1"
 
 
 SOFT_RESET = 0x3646
@@ -49,7 +50,9 @@ class SCD4X:
 
     def rdwr(self, command, value=None, response_length=0, delay=0):
         if value is not None:
-            msg_w = i2c_msg.write(self.address, struct.pack(">HHb", command, value, self.crc8(value)))
+            msg_w = i2c_msg.write(
+                self.address, struct.pack(">HHB", command, value, self.crc8(value))
+            )
         else:
             msg_w = i2c_msg.write(self.address, struct.pack(">H", command))
 
@@ -66,7 +69,7 @@ class SCD4X:
             result = list(msg_r)
             data = []
             for chunk in range(0, len(result), 3):
-                if self.crc8(result[chunk:chunk + 2]) != result[chunk + 2]:
+                if self.crc8(result[chunk : chunk + 2]) != result[chunk + 2]:
                     raise ValueError("ICP10125: Invalid CRC8 in response.")
                 data.append((result[chunk] << 8) | result[chunk + 1])
             if len(data) == 1:
@@ -132,14 +135,14 @@ class SCD4X:
         self.rdwr(SET_PRESSURE, value=ambient_pressure)
 
     def set_temperature_offset(self, temperature_offset):
-        if temperature_offset < 374:
+        if temperature_offset > 374:
             raise ValueError("Temperature offset must be <= 374c")
         offset = int(temperature_offset * (1 << 16) / 175)
         self.rdwr(SET_TEMP_OFFSET, value=offset)
 
     def get_temperature_offset(self):
-        response = self.rdwr(GET_TEMP_OFFSET, delay=1)
-        return 175.0 * response / (2 << 16)
+        response = self.rdwr(GET_TEMP_OFFSET, response_length=1, delay=1)
+        return 175.0 * response / (1 << 16)
 
     def set_altitude(self, altitude):
         self.rdwr(SET_ALTITUDE, value=altitude)
@@ -147,13 +150,19 @@ class SCD4X:
     def get_altitude(self):
         return self.rdwr(GET_ALTITUDE, response_length=1, delay=1)
 
+    def set_automatic_self_calibration_enabled(self, value):
+        self.rdwr(SET_ASCE, value=int(value))
+
+    def get_automatic_self_calibration_enabled(self):
+        return bool(self.rdwr(GET_ASCE, response_length=1, delay=1))
+
+    def persist_settings(self):
+        self.rdwr(PERSIST_SETTINGS, delay=800)
+
     def crc8(self, data, polynomial=0x31):
         if type(data) is int:
-            data = [
-                (data >> 8) & 0xff,
-                data & 0xff
-            ]
-        result = 0xff
+            data = [(data >> 8) & 0xFF, data & 0xFF]
+        result = 0xFF
         for byte in data:
             result ^= byte
             for bit in range(8):
@@ -162,4 +171,4 @@ class SCD4X:
                     result ^= polynomial
                 else:
                     result <<= 1
-        return result & 0xff
+        return result & 0xFF
