@@ -178,22 +178,24 @@ def test_data_ready(smbus2, scd4x):
     sensor.rdwr.reset_mock()
     sensor.rdwr.return_value = 0x8006
     assert sensor.data_ready() == True
-    assert sensor.rdwr.called_once_with(scd4x.DATA_READY, response_length=1, delay=1)
+    sensor.rdwr.assert_called_once_with(scd4x.DATA_READY, response_length=1, delay=1)
 
     # Failure
     sensor.rdwr.reset_mock()
     sensor.rdwr.return_value = 0x8000
     assert sensor.data_ready() == False
-    assert sensor.rdwr.called_once_with(scd4x.DATA_READY, response_length=1, delay=1)
+    sensor.rdwr.assert_called_once_with(scd4x.DATA_READY, response_length=1, delay=1)
+
 
 def test_get_serial_number(smbus2, scd4x):
     scd4x.SCD4X.rdwr = mock.MagicMock()
     sensor = scd4x.SCD4X()
 
     sensor.rdwr.reset_mock()
-    sensor.rdwr.return_value = [0xf896, 0x9f07, 0x3bbe]
-    assert sensor.get_serial_number() == 0xf8969f073bbe
-    assert sensor.rdwr.called_once_with(scd4x.SERIAL_NUMBER, response_length=3, delay=1)
+    sensor.rdwr.return_value = [0xF896, 0x9F07, 0x3BBE]
+    assert sensor.get_serial_number() == 0xF8969F073BBE
+    sensor.rdwr.assert_called_once_with(scd4x.SERIAL_NUMBER, response_length=3, delay=1)
+
 
 def test_start_periodic_measurement(smbus2, scd4x):
     scd4x.SCD4X.rdwr = mock.MagicMock()
@@ -203,13 +205,14 @@ def test_start_periodic_measurement(smbus2, scd4x):
     sensor.rdwr.reset_mock()
     sensor.rdwr.return_value = []
     sensor.start_periodic_measurement()
-    assert sensor.rdwr.called_once_with(scd4x.START_PERIODIC_MEASUREMENT)
+    sensor.rdwr.assert_called_once_with(scd4x.START_PERIODIC_MEASUREMENT)
 
     # Low Power
     sensor.rdwr.reset_mock()
     sensor.rdwr.return_value = []
     sensor.start_periodic_measurement(low_power=True)
-    assert sensor.rdwr.called_once_with(scd4x.START_LOW_POWER_PERIODIC_MEASUREMENT)
+    sensor.rdwr.assert_called_once_with(scd4x.START_LOW_POWER_PERIODIC_MEASUREMENT)
+
 
 def test_stop_periodic_measurement(smbus2, scd4x):
     scd4x.SCD4X.rdwr = mock.MagicMock()
@@ -218,7 +221,8 @@ def test_stop_periodic_measurement(smbus2, scd4x):
     sensor.rdwr.reset_mock()
     sensor.rdwr.return_value = []
     sensor.stop_periodic_measurement()
-    assert sensor.rdwr.called_once_with(scd4x.STOP_PERIODIC_MEASUREMENT, delay=500)
+    sensor.rdwr.assert_called_once_with(scd4x.STOP_PERIODIC_MEASUREMENT, delay=500)
+
 
 def test_set_ambient_pressure(smbus2, scd4x):
     scd4x.SCD4X.rdwr = mock.MagicMock()
@@ -227,6 +231,90 @@ def test_set_ambient_pressure(smbus2, scd4x):
     sensor.rdwr.reset_mock()
     sensor.rdwr.return_value = []
     sensor.set_ambient_pressure(mock.sentinel.value)
-    assert sensor.rdwr.called_once_with(scd4x.SET_PRESSURE, value=mock.sentinel.value)
+    sensor.rdwr.assert_called_once_with(scd4x.SET_PRESSURE, value=mock.sentinel.value)
 
 
+def test_set_temperature_offset(smbus2, scd4x):
+    scd4x.SCD4X.rdwr = mock.MagicMock()
+    sensor = scd4x.SCD4X()
+
+    sensor.rdwr.reset_mock()
+    sensor.rdwr.return_value = []
+    sensor.set_temperature_offset(5.4)
+    sensor.rdwr.assert_called_once_with(scd4x.SET_TEMP_OFFSET, value=0x07E6)
+
+
+def test_get_temperature_offset(smbus2, scd4x):
+    scd4x.SCD4X.rdwr = mock.MagicMock()
+    sensor = scd4x.SCD4X()
+
+    sensor.rdwr.reset_mock()
+    sensor.rdwr.return_value = 0x0912
+    assert round(sensor.get_temperature_offset(), 2) == 6.2
+    sensor.rdwr.assert_called_once_with(
+        scd4x.GET_TEMP_OFFSET, response_length=1, delay=1
+    )
+
+
+def test_set_altitude(smbus2, scd4x):
+    scd4x.SCD4X.rdwr = mock.MagicMock()
+    sensor = scd4x.SCD4X()
+
+    sensor.rdwr.reset_mock()
+    sensor.rdwr.return_value = []
+    sensor.set_altitude(mock.sentinel.value)
+    sensor.rdwr.assert_called_once_with(scd4x.SET_ALTITUDE, value=mock.sentinel.value)
+
+
+def test_get_altitude(smbus2, scd4x):
+    scd4x.SCD4X.rdwr = mock.MagicMock()
+    sensor = scd4x.SCD4X()
+
+    sensor.rdwr.reset_mock()
+    sensor.rdwr.return_value = mock.sentinel.value
+    assert sensor.get_altitude() == mock.sentinel.value
+    sensor.rdwr.assert_called_once_with(scd4x.GET_ALTITUDE, response_length=1, delay=1)
+
+
+def test_set_automatic_self_calibration_enabled(smbus2, scd4x):
+    scd4x.SCD4X.rdwr = mock.MagicMock()
+    sensor = scd4x.SCD4X()
+
+    # Setting True
+    sensor.rdwr.reset_mock()
+    sensor.rdwr.return_value = []
+    sensor.set_automatic_self_calibration_enabled(True)
+    sensor.rdwr.assert_called_once_with(scd4x.SET_ASCE, value=1)
+
+    # Setting False
+    sensor.rdwr.reset_mock()
+    sensor.rdwr.return_value = []
+    sensor.set_automatic_self_calibration_enabled(False)
+    sensor.rdwr.assert_called_once_with(scd4x.SET_ASCE, value=0)
+
+
+def test_get_automatic_self_calibration_enabled(smbus2, scd4x):
+    scd4x.SCD4X.rdwr = mock.MagicMock()
+    sensor = scd4x.SCD4X()
+
+    # Getting True
+    sensor.rdwr.reset_mock()
+    sensor.rdwr.return_value = 1
+    assert sensor.get_automatic_self_calibration_enabled() is True
+    sensor.rdwr.assert_called_once_with(scd4x.GET_ASCE, response_length=1, delay=1)
+
+    # Getting False
+    sensor.rdwr.reset_mock()
+    sensor.rdwr.return_value = 0
+    assert sensor.get_automatic_self_calibration_enabled() is False
+    sensor.rdwr.assert_called_once_with(scd4x.GET_ASCE, response_length=1, delay=1)
+
+
+def test_persist_settings(smbus2, scd4x):
+    scd4x.SCD4X.rdwr = mock.MagicMock()
+    sensor = scd4x.SCD4X()
+
+    sensor.rdwr.reset_mock()
+    sensor.rdwr.return_value = []
+    sensor.persist_settings()
+    sensor.rdwr.assert_called_once_with(scd4x.PERSIST_SETTINGS, delay=800)
