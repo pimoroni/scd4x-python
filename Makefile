@@ -31,7 +31,7 @@ check:
 	@echo "Checking library/CHANGELOG.txt"
 	@cat library/CHANGELOG.txt | grep ^${LIBRARY_VERSION}
 	@echo "Checking library/${LIBRARY_NAME}/__init__.py"
-	@cat library/${LIBRARY_NAME}/__init__.py | grep "^__version__ = '${LIBRARY_VERSION}'"
+	@cat library/${LIBRARY_NAME}/__init__.py | grep "^__version__ = \"${LIBRARY_VERSION}\""
 
 tag:
 	git tag -a "v${LIBRARY_VERSION}" -m "Version ${LIBRARY_VERSION}"
