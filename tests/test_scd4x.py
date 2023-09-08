@@ -177,13 +177,13 @@ def test_data_ready(smbus2, scd4x):
     # OK
     sensor.rdwr.reset_mock()
     sensor.rdwr.return_value = 0x8006
-    assert sensor.data_ready() == True
+    assert sensor.data_ready() is True
     sensor.rdwr.assert_called_once_with(scd4x.DATA_READY, response_length=1, delay=1)
 
     # Failure
     sensor.rdwr.reset_mock()
     sensor.rdwr.return_value = 0x8000
-    assert sensor.data_ready() == False
+    assert sensor.data_ready() is False
     sensor.rdwr.assert_called_once_with(scd4x.DATA_READY, response_length=1, delay=1)
 
 
