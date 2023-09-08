@@ -1,7 +1,7 @@
 # SCD4X C02 Sensor
 
-[![Build Status](https://shields.io/github/workflow/status/pimoroni/scd4x-python/Python%20Tests.svg)](https://github.com/pimoroni/scd4x-python/actions/workflows/test.yml)
-[![Coverage Status](https://coveralls.io/repos/github/pimoroni/scd4x-python/badge.svg?branch=main)](https://coveralls.io/github/pimoroni/scd4x-python?branch=master)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/pimoroni/scd4x-python/test.yml?branch=main)](https://github.com/pimoroni/scd4x-python/actions/workflows/test.yml)
+[![Coverage Status](https://coveralls.io/repos/github/pimoroni/scd4x-python/badge.svg?branch=master)](https://coveralls.io/github/pimoroni/scd4x-python?branch=master)
 [![PyPi Package](https://img.shields.io/pypi/v/scd4x.svg)](https://pypi.python.org/pypi/scd4x)
 [![Python Versions](https://img.shields.io/pypi/pyversions/scd4x.svg)](https://pypi.python.org/pypi/scd4x)
 
