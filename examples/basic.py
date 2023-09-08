@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from datetime import datetime, timezone
-from scd4x import SCD4X
 
+from scd4x import SCD4X
 
 device = SCD4X(quiet=False)
 device.start_periodic_measurement()
