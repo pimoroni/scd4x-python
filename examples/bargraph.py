@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
-from scd4x import SCD4X
 
+from scd4x import SCD4X
 
 BAR_CHAR = u'\u2588'
 

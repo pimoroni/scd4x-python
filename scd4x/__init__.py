@@ -3,7 +3,7 @@ import time
 
 from smbus2 import SMBus, i2c_msg
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 
 SOFT_RESET = 0x3646
@@ -160,7 +160,7 @@ class SCD4X:
         self.rdwr(PERSIST_SETTINGS, delay=800)
 
     def crc8(self, data, polynomial=0x31):
-        if type(data) is int:
+        if isinstance(data, int):
             data = [(data >> 8) & 0xFF, data & 0xFF]
         result = 0xFF
         for byte in data:
