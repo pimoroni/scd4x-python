@@ -3,15 +3,15 @@ import sys
 
 from scd4x import SCD4X
 
-BAR_CHAR = u'\u2588'
+BAR_CHAR = u"\u2588"
 
-ANSI_COLOR_RED = '\x1b[31m'
-ANSI_COLOR_GREEN = '\x1b[32m'
-ANSI_COLOR_YELLOW = '\x1b[33m'
-ANSI_COLOR_BLUE = '\x1b[34m'
-ANSI_COLOR_MAGENTA = '\x1b[35m'
-ANSI_COLOR_BLACK = '\x1b[30m'
-ANSI_COLOR_RESET = '\x1b[0m'
+ANSI_COLOR_RED = "\x1b[31m"
+ANSI_COLOR_GREEN = "\x1b[32m"
+ANSI_COLOR_YELLOW = "\x1b[33m"
+ANSI_COLOR_BLUE = "\x1b[34m"
+ANSI_COLOR_MAGENTA = "\x1b[35m"
+ANSI_COLOR_BLACK = "\x1b[30m"
+ANSI_COLOR_RESET = "\x1b[0m"
 
 
 colours = [ANSI_COLOR_BLUE, ANSI_COLOR_GREEN, ANSI_COLOR_YELLOW, ANSI_COLOR_RED, ANSI_COLOR_MAGENTA]
@@ -55,7 +55,7 @@ try:
         t_reading = "{:.4f}c".format(temperature).ljust(BAR_WIDTH + 14)
         c_reading = "{:.0f}PPM".format(co2).ljust(BAR_WIDTH + 14)
 
-        sys.stdout.write('\x1b[0;1H')
+        sys.stdout.write("\x1b[0;1H")
         sys.stdout.write(u"""{title}
 {blank}
 Temperature: {t_bar}
