@@ -3,7 +3,16 @@
 FORCE=false
 LIBRARY_NAME=`grep -m 1 name pyproject.toml | awk -F" = " '{print substr($2,2,length($2)-2)}'`
 RESOURCES_DIR=$HOME/Pimoroni/$LIBRARY_NAME
-PYTHON="/usr/bin/python3"
+PYTHON="python"
+
+
+venv_check() {
+	PYTHON_BIN=`which $PYTHON`
+	if [[ $VIRTUAL_ENV == "" ]] || [[ $PYTHON_BIN != $VIRTUAL_ENV* ]]; then
+		printf "This script should be run in a virtual Python environment.\n"
+		exit 1
+	fi
+}
 
 user_check() {
 	if [ $(id -u) -eq 0 ]; then
@@ -49,6 +58,7 @@ warning() {
 printf "$LIBRARY_NAME Python Library: Uninstaller\n\n"
 
 user_check
+venv_check
 
 printf "Uninstalling for Python 3...\n"
 $PYTHON -m pip uninstall $LIBRARY_NAME
