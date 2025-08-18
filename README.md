@@ -25,5 +25,5 @@ Latest/development library from GitHub:
 
 * `git clone https://github.com/pimoroni/scd4x-python`
 * `cd scd4x-python`
-* `sudo ./install.sh`
+* `./install.sh`
 
