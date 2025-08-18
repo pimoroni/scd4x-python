@@ -1,4 +1,4 @@
-# SCD4X C02 Sensor
+# SCD4X CO2 Sensor
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/pimoroni/scd4x-python/test.yml?branch=main)](https://github.com/pimoroni/scd4x-python/actions/workflows/test.yml)
 [![Coverage Status](https://coveralls.io/repos/github/pimoroni/scd4x-python/badge.svg?branch=master)](https://coveralls.io/github/pimoroni/scd4x-python?branch=master)
