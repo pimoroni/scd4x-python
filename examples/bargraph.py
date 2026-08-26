@@ -3,7 +3,7 @@ import sys
 
 from scd4x import SCD4X
 
-BAR_CHAR = u"\u2588"
+BAR_CHAR = "\u2588"
 
 ANSI_COLOR_RED = "\x1b[31m"
 ANSI_COLOR_GREEN = "\x1b[32m"
@@ -52,11 +52,11 @@ try:
         t_bar = t_colour + t_bar + ANSI_COLOR_RESET
         c_bar = p_colour + c_bar + ANSI_COLOR_RESET
 
-        t_reading = "{:.4f}c".format(temperature).ljust(BAR_WIDTH + 14)
-        c_reading = "{:.0f}PPM".format(co2).ljust(BAR_WIDTH + 14)
+        t_reading = f"{temperature:.4f}c".ljust(BAR_WIDTH + 14)
+        c_reading = f"{co2:.0f}PPM".ljust(BAR_WIDTH + 14)
 
         sys.stdout.write("\x1b[0;1H")
-        sys.stdout.write(u"""{title}
+        sys.stdout.write("""{title}
 {blank}
 Temperature: {t_bar}
 {t_reading}

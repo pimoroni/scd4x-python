@@ -49,12 +49,7 @@ class SCD4X:
             print(f"SCD4X, Serial: {serial:06x}")
 
     def rdwr(self, command, value=None, response_length=0, delay=0):
-        if value is not None:
-            msg_w = i2c_msg.write(
-                self.address, struct.pack(">HHB", command, value, self.crc8(value))
-            )
-        else:
-            msg_w = i2c_msg.write(self.address, struct.pack(">H", command))
+        msg_w = i2c_msg.write(self.address, struct.pack(">HHB", command, value, self.crc8(value))) if value is not None else i2c_msg.write(self.address, struct.pack(">H", command))
 
         self.bus.i2c_rdwr(msg_w)
 
@@ -165,7 +160,7 @@ class SCD4X:
         result = 0xFF
         for byte in data:
             result ^= byte
-            for bit in range(8):
+            for _bit in range(8):
                 if result & 0x80:
                     result <<= 1
                     result ^= polynomial
