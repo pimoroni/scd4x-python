@@ -1,9 +1,13 @@
 import struct
 import time
+from importlib.metadata import PackageNotFoundError, version
 
 from smbus2 import SMBus, i2c_msg
 
-__version__ = "0.0.2"
+try:
+    __version__ = version("scd4x")
+except PackageNotFoundError:
+    __version__ = "0.0.0"
 
 
 SOFT_RESET = 0x3646
